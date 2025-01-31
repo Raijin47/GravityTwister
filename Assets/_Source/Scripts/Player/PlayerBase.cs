@@ -31,6 +31,14 @@ public class PlayerBase : MonoBehaviour
         Game.Action.OnExit += Action_OnExit;
         Game.Locator.Gravity.OnChangeCling += Gravity_OnChangeCling;
         Game.Locator.Input.OnLeft += Input_OnMove;
+        Game.Action.OnLose += Action_OnLose;
+    }
+
+    private void Action_OnLose()
+    {
+        _rigidbody.velocity = Vector3.zero;
+        _canMove = false;
+        _isActive = false;
     }
 
     private void Action_OnExit()
