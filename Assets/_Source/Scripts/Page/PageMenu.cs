@@ -4,6 +4,7 @@ using UnityEngine;
 public class PageMenu : PanelBase
 {
     [SerializeField] private ButtonBase _buttonStart;
+    [SerializeField] private ButtonBase _buttonShop;
 
     protected override void Hide()
     {
@@ -25,7 +26,15 @@ public class PageMenu : PanelBase
         IsActive = true;
 
         _buttonStart.OnClick.AddListener(Game.Action.SendEnter);
+        _buttonShop.OnClick.AddListener(GoToShop);
+
         Game.Action.OnEnter += Exit;
         Game.Action.OnExit += Enter;
+    }
+
+    private void GoToShop()
+    {
+        Exit();
+        Game.Locator.PageShop.Enter();
     }
 }
