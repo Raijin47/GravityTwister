@@ -31,6 +31,7 @@ public class PlayerBase : MonoBehaviour
         Game.Action.OnExit += Action_OnExit;
         Game.Locator.Gravity.OnChangeCling += Gravity_OnChangeCling;
         Game.Locator.Input.OnLeft += Input_OnMove;
+        Game.Locator.Input.OnJump += Jump;
         Game.Action.OnLose += Action_OnLose;
     }
 
@@ -104,6 +105,17 @@ public class PlayerBase : MonoBehaviour
 
         _tween?.Kill();
         _tween = _view.DOLocalMoveX(1.5f, MovementDuration);
+    }
+
+    private void Jump()
+    {
+        _tween?.Kill();
+        _tween = _view.DOLocalJump(new Vector3(0, 1.5f, 0), 1, 1, MovementDuration, true);
+    }
+
+    private void Slide()
+    {
+
     }
 
     private void Gravity_OnChangeCling(Vector3 pos, Vector3 rot)
