@@ -31,7 +31,7 @@ public class PlayerBase : MonoBehaviour
         Game.Action.OnExit += Action_OnExit;
         Game.Locator.Gravity.OnChangeCling += Gravity_OnChangeCling;
         Game.Locator.Input.OnLeft += Input_OnMove;
-        Game.Locator.Input.OnJump += Jump;
+        //Game.Locator.Input.OnJump += Jump;
         Game.Action.OnLose += Action_OnLose;
     }
 
