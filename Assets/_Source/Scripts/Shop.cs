@@ -1,22 +1,26 @@
-using System;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
-    [SerializeField] private EquipmentShop[] _equipments;
+    [SerializeField] private ShopElement[] _equipments;
+    [SerializeField] private TextMeshProUGUI _buttonText;
     [SerializeField] private ButtonBase _buttonNext, _buttonPreview;
+    [SerializeField] private ButtonBase _buttonAction;
     [SerializeField] private Sprite _disableImage, _enableImage;
+
     private int _current;
 
     private void Start()
     {
         _buttonNext.OnClick.AddListener(Next);
         _buttonPreview.OnClick.AddListener(Preview);
+        _buttonAction.OnClick.AddListener(Action);
 
-        foreach (EquipmentShop equpment in _equipments)
+        foreach (ShopElement equpment in _equipments)
             equpment.Init();
 
+        _equipments[_current].Frame = _enableImage;
         UpdateUI();
     }
 
@@ -45,47 +49,32 @@ public class Shop : MonoBehaviour
 
     private void UpdateUI()
     {
-
-    }
-}
-
-[Serializable]
-public class EquipmentShop
-{
-    [SerializeField] private GameObject[] _equipment;
-    [SerializeField] private Sprite[] _sprites;
-    [SerializeField] private Image _image;
-    [SerializeField] private Image _frame;
-    [SerializeField] private int _id;
-    private int _current;
-
-    public Sprite Frame 
-    {
-        set 
-        {
-            _frame.sprite = value;
-        }
-    } 
-
-    public int Current
-    {
-        get => _current;
-        set
-        {
-            _equipment[_current].SetActive(false);
-
-            _current = value;
-            if (_current == _equipment.Length) _current = 0;
-            if (_current < 0) _current = _equipment.Length - 1;
-
-            _image.sprite = _sprites[_current];
-            _equipment[_current].SetActive(true);
-        }
+        _buttonText.text = _equipments[_current].IsEquipped() ? 
+            "Equipped" : "Unequip";
     }
 
-    public void Init()
+    private void Action()
     {
-        _current = Game.Data.Saves.CurrentEquip[_id];
-        _equipment[_current].SetActive(true);
+        if(!_equipments[_current].IsPurchased())
+        {
+            if (Game.Wallet.Spend(100))
+                _equipments[_current].Buy();
+        }
+        else
+        {
+
+        }
+        
+        
+
+
+
+        UpdateUI();
+    }
+
+    private void OnValidate()
+    {
+        for(int i = 0; i < _equipments.Length; i++)
+            _equipments[i].ID = i;
     }
 }
