@@ -1,18 +1,23 @@
 using DG.Tweening;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerBase : MonoBehaviour
 {
     public event Action OnChangeGravity;
+    public event Action OnSlide;
+    public event Action OnJump;
 
     [SerializeField] private float _speed;
+    [SerializeField] private float _requiredSpeed;
     [SerializeField] private Transform _anchor;
     [SerializeField] private Transform _view;
 
     private Rigidbody _rigidbody;
     private Sequence _sequence;
     private Tween _tween;
+    private Coroutine _coroutine;
 
     private bool _canMove;
     private bool _isActive;
@@ -20,6 +25,8 @@ public class PlayerBase : MonoBehaviour
     private StatePosition _positionState;
 
     private readonly float MovementDuration = .5f;
+    public float JumpDuration = .7f;
+    public float FallingDuration = 0.1f;
     private readonly float ClipingDuration = 1f;
 
 
@@ -31,9 +38,11 @@ public class PlayerBase : MonoBehaviour
         Game.Action.OnExit += Action_OnExit;
         Game.Locator.Gravity.OnChangeCling += Gravity_OnChangeCling;
         Game.Locator.Input.OnLeft += Input_OnMove;
-        //Game.Locator.Input.OnJump += Jump;
+        Game.Locator.Input.OnJump += Input_OnJump;
         Game.Action.OnLose += Action_OnLose;
     }
+
+
 
     private void Action_OnLose()
     {
@@ -83,6 +92,15 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
+    private void Input_OnJump(bool isJump)
+    {
+        if (!_canMove) return;
+
+        if (isJump) Jump();
+        else Slide();
+    }
+
+
     private void MoveLeft()
     {
         _positionState = StatePosition.Left;
@@ -109,13 +127,22 @@ public class PlayerBase : MonoBehaviour
 
     private void Jump()
     {
-        _tween?.Kill();
-        _tween = _view.DOLocalJump(new Vector3(0, 1.5f, 0), 1, 1, MovementDuration, true);
+        Debug.Log("Jump");
+        OnJump?.Invoke();
+
+        _sequence?.Kill();
+
+        _sequence = DOTween.Sequence();
+
+        _sequence.
+            Append(_view.DOLocalMoveY(2.5f, JumpDuration)).
+            Append(_view.DOLocalMoveY(0, FallingDuration));
     }
 
     private void Slide()
     {
-
+        Debug.Log("Slide");
+        OnSlide?.Invoke();
     }
 
     private void Gravity_OnChangeCling(Vector3 pos, Vector3 rot)

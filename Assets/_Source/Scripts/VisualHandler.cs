@@ -1,6 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class VisualHandler : MonoBehaviour
@@ -35,7 +33,7 @@ public class VisualHandler : MonoBehaviour
 
     private void Action_OnExit()
     {
-        _player.localPosition = new Vector3(0, -1, -5);
+        _player.localPosition = new Vector3(0, -0.97f, -5);
         _player.localRotation = Quaternion.Euler(0, -180, 0);
         _leftDoor.localPosition = Vector3.zero;
         _rightDoor.localPosition = Vector3.zero;
