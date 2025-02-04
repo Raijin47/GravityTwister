@@ -49,6 +49,12 @@ public class InputHandler : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
                 OnLeft?.Invoke(IsInverse);
+
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+                OnJump?.Invoke(IsInverse);
+
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+                OnJump?.Invoke(!IsInverse);
         }
     }
 

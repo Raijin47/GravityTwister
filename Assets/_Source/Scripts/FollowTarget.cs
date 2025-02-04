@@ -1,9 +1,11 @@
 using UnityEngine;
 
+
 public class FollowTarget : MonoBehaviour
 {
     [SerializeField] private Transform _target;
     [SerializeField, Range(1, 10)] private float _followSpeed;
+
     private Transform _transform;
 
     private void Awake() => _transform = transform;

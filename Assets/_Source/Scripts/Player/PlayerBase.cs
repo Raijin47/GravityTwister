@@ -1,6 +1,5 @@
 using DG.Tweening;
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class PlayerBase : MonoBehaviour
@@ -17,8 +16,8 @@ public class PlayerBase : MonoBehaviour
     private Rigidbody _rigidbody;
     private Sequence _sequence;
     private Tween _tween;
-    private Coroutine _coroutine;
 
+    private bool _isJump;
     private bool _canMove;
     private bool _isActive;
 
@@ -41,8 +40,6 @@ public class PlayerBase : MonoBehaviour
         Game.Locator.Input.OnJump += Input_OnJump;
         Game.Action.OnLose += Action_OnLose;
     }
-
-
 
     private void Action_OnLose()
     {
@@ -96,6 +93,8 @@ public class PlayerBase : MonoBehaviour
     {
         if (!_canMove) return;
 
+
+
         if (isJump) Jump();
         else Slide();
     }
@@ -127,16 +126,18 @@ public class PlayerBase : MonoBehaviour
 
     private void Jump()
     {
+        if (_isJump) return;
+        _isJump = true;
+
         Debug.Log("Jump");
         OnJump?.Invoke();
 
         _sequence?.Kill();
-
         _sequence = DOTween.Sequence();
 
         _sequence.
             Append(_view.DOLocalMoveY(2.5f, JumpDuration)).
-            Append(_view.DOLocalMoveY(0, FallingDuration));
+            Append(_view.DOLocalMoveY(0, FallingDuration).OnComplete(() => _isJump = false));
     }
 
     private void Slide()
