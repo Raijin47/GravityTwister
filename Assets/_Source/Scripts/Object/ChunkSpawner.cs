@@ -20,11 +20,8 @@ public class ChunkSpawner : MonoBehaviour
     {
         _position = Vector3.zero;
 
-        for(int i = 0; i < 4; i++)
-        {
-            Spawn(_position);
-            _position += _distance;
-        }
+        for (int i = 0; i < 4; i++)
+            CreateNewChunk();
     }
 
     private void Spawn(Vector3 position)
@@ -37,8 +34,8 @@ public class ChunkSpawner : MonoBehaviour
 
     public void CreateNewChunk()
     {
-        Spawn(_position);
         _position += _distance;
+        Spawn(_position);
     }
 
     private void Obj_Die(PoolMember obj) => Chunks.Remove(obj);
