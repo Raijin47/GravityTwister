@@ -5,7 +5,7 @@ public class ChunkSpawner : MonoBehaviour
 {
     [SerializeField] private PoolMember _chunk;
     private Pool _pool;
-    private Vector3 _distance = new(0, 0, 35);
+    private Vector3 _distance = new(0, 0, 70);
     private Vector3 _position;
     private readonly List<PoolMember> Chunks = new();
 
@@ -18,9 +18,9 @@ public class ChunkSpawner : MonoBehaviour
 
     private void Action_OnEnter()
     {
-        _position = Vector3.zero;
+        _position = new Vector3(0, 0, 35);
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
             CreateNewChunk();
     }
 
@@ -34,8 +34,8 @@ public class ChunkSpawner : MonoBehaviour
 
     public void CreateNewChunk()
     {
-        _position += _distance;
         Spawn(_position);
+        _position += _distance;
     }
 
     private void Obj_Die(PoolMember obj) => Chunks.Remove(obj);
@@ -44,7 +44,5 @@ public class ChunkSpawner : MonoBehaviour
     {
         for(int i = Chunks.Count - 1; i >= 0; i--)       
             Chunks[i].ReturnToPool();
-        
-        _position = Vector3.zero;
     }
 }

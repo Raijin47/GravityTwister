@@ -9,6 +9,13 @@ public class Watch : MonoBehaviour
 
     private float _currentTime;
 
+    public float CurrentTime => _currentTime;
+    public string GetTime()
+    {
+        string text = TextUtility.FormatMinute(_currentTime);
+        return text;    
+    }
+
     private void Start()
     {
         _text = GetComponent<TextMeshProUGUI>();

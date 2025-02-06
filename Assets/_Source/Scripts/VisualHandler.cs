@@ -9,7 +9,6 @@ public class VisualHandler : MonoBehaviour
     [SerializeField] private float _durationMove;
     [SerializeField] private float _durationOpenDoor;
 
-
     private Sequence _sequence;
 
     private void Start()
@@ -28,7 +27,13 @@ public class VisualHandler : MonoBehaviour
             Append(_player.DOLocalRotate(Vector3.zero, _durationRotate)).
             Join(_leftDoor.DOLocalMoveX(1.4f, _durationOpenDoor)).
             Join(_rightDoor.DOLocalMoveX(-1.35f, _durationOpenDoor)).
-            Join(_player.DOLocalMoveZ(0, _durationMove).SetEase(Ease.Linear).SetDelay(_durationRotate).OnComplete(Game.Action.SendStart));
+            Join(_player.DOLocalMoveZ(0, _durationMove).SetEase(Ease.Linear).SetDelay(_durationRotate).OnComplete(SetStart));
+    }
+
+    private void SetStart()
+    {
+        Game.Action.SendStart();
+        Game.Locator.Gravity.ApplyDown();
     }
 
     private void Action_OnExit()

@@ -29,7 +29,6 @@ public class GravityHandler : MonoBehaviour
 
     private void Start() 
     {
-        Game.Action.OnEnter += Action_OnEnter;
         Game.Action.OnExit += Action_OnExit;
     }
 
@@ -41,17 +40,6 @@ public class GravityHandler : MonoBehaviour
             Append(_camera.DOLocalMove(new Vector3(0, 0, -8), _delay)).
             Join(_camera.DOLocalRotate(new Vector3(5, 0, 0), _delay));
     }
-
-    private void Action_OnEnter() 
-    { 
-        Physics.gravity = DownG;
-
-        Kill();
-
-        _sequence.
-            Append(_camera.DOLocalMove(new Vector3(0, 2, -8), _delay)).
-            Join(_camera.DOLocalRotate(Vector3.zero, _delay));
-    } 
 
     public void ApplyLeft()
     {

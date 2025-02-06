@@ -2,25 +2,63 @@ using UnityEngine;
 
 public class GravityTrigger : MonoBehaviour
 {
-    [SerializeField] private GravityHook _gravity;
+    public GravityHook Gravity { get; set; }
+   
+    [SerializeField] private ElectroFloor _floor;
+
+    private Collider _collider;
+
+    private readonly Vector3[] Pos = new Vector3[3]
+    {
+        new Vector3(-1.5f, 0, 0),
+        new Vector3(1.5f, 0, 0),
+        Vector3.zero
+    };
+
+    private void Awake() => _collider = GetComponent<Collider>();
 
     private void OnTriggerEnter(Collider other)
     {
-        switch (_gravity)
+        _collider.enabled = false;
+        _floor.Disable();
+      
+        int r = Random.Range(0, 2);
+        var gravity = Game.Locator.Gravity;
+
+        switch (Gravity)
         {
             case GravityHook.Left:
-                Game.Locator.Gravity.ApplyLeft();
+                if (r == 0) gravity.ApplyUp();
+                if (r == 1) gravity.ApplyDown();
+                if (r == 2) gravity.ApplyRight();
                 break;
+
             case GravityHook.Right:
-                Game.Locator.Gravity.ApplyRight();
+                if (r == 0) gravity.ApplyUp();
+                if (r == 1) gravity.ApplyDown();
+                if (r == 2) gravity.ApplyLeft();
                 break;
+
             case GravityHook.Up:
-                Game.Locator.Gravity.ApplyUp();
+                if (r == 0) gravity.ApplyLeft();
+                if (r == 1) gravity.ApplyDown();
+                if (r == 2) gravity.ApplyRight();
                 break;
+
             case GravityHook.Down:
-                Game.Locator.Gravity.ApplyDown();
+                if (r == 0) gravity.ApplyUp();
+                if (r == 1) gravity.ApplyLeft();
+                if (r == 2) gravity.ApplyRight();
                 break;
         }
+    }
+
+    private void OnEnable()
+    {
+        transform.localPosition = Pos[Random.Range(0, Pos.Length)];
+
+        if (_collider != null)
+            _collider.enabled = true;
     }
 }
 
