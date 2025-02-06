@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WallHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Transform[] _walls;
 
-    // Update is called once per frame
-    void Update()
+    private readonly Vector3[] AngleRot = new Vector3[4]
     {
-        
+        new Vector3(0, 0, 90),
+        new Vector3(0, 0, -90),
+        new Vector3(0, 0, 180),
+        Vector3.zero
+    };
+
+    private void OnEnable()
+    {
+        for (int i = 0; i < _walls.Length; i++)      
+            _walls[i].localRotation = Quaternion.Euler(AngleRot[Random.Range(0, AngleRot.Length)]);       
     }
 }
