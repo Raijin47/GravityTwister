@@ -3,6 +3,8 @@ using UnityEngine;
 public class DeathTrigger : MonoBehaviour
 {
     private Collider _collider;
+    public Collider Collider => _collider;
+
 
     private void Awake() => _collider = GetComponent<Collider>();
 
@@ -15,6 +17,7 @@ public class DeathTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         _collider.enabled = false;
+        Game.Audio.PlayClip(1);
         Game.Action.SendLose();
     }
 }

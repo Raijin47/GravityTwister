@@ -12,10 +12,10 @@ public class Column : MonoBehaviour
         bool pos = Random.value > 0.5f;
 
         transform.parent.rotation = Quaternion.Euler(0, 0, rot ? 0 : 90);
-        transform.localPosition = new Vector3(pos ? 1.8f : -1.8f, 0, 0);
+        transform.localPosition = new Vector3(pos ? .8f : -.8f, 0, 0);
 
         _tween?.Kill();
 
-        _tween = transform.DOLocalMoveX(pos? -1.8f : 1.8f, _delay).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+        _tween = transform.DOLocalMoveX(pos? -.8f : .8f, _delay).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
     }
 }

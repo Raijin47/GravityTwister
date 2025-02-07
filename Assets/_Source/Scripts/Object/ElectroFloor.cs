@@ -3,6 +3,7 @@ using UnityEngine;
 public class ElectroFloor : MonoBehaviour
 {
     [SerializeField] private GravityTrigger _trigger;
+    [SerializeField] private DeathTrigger _deathTrigger;
     private bool _active;
 
 
@@ -18,7 +19,11 @@ public class ElectroFloor : MonoBehaviour
         _active = false;
     }
 
-    public void Disable() => _active = false;
+    public void Disable()
+    {
+        _active = false;
+        _deathTrigger.Collider.enabled = false;
+    }
 
     private void Gravity_OnChangeCling(Vector3 arg1, Vector3 arg2)
     {

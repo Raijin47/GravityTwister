@@ -9,7 +9,15 @@ public class Watch : MonoBehaviour
 
     private float _currentTime;
 
-    public float CurrentTime => _currentTime;
+    public float CurrentTime 
+    {
+        get => _currentTime;
+        set
+        {
+            _currentTime = value;
+            _text.text = TextUtility.FormatMinute(_currentTime);
+        }
+    }
     public string GetTime()
     {
         string text = TextUtility.FormatMinute(_currentTime);
@@ -25,7 +33,7 @@ public class Watch : MonoBehaviour
         Game.Action.OnRestart += Action_OnEnter;
     }
 
-    private void Action_OnEnter() => _currentTime = 0;
+    private void Action_OnEnter() => CurrentTime = 0;
 
     private void Action_OnStart()
     {
@@ -43,8 +51,7 @@ public class Watch : MonoBehaviour
     {
         while (true)
         {
-            _currentTime += Time.deltaTime;
-            _text.text = TextUtility.FormatMinute(_currentTime);
+            CurrentTime += Time.deltaTime;
             yield return null;
         }        
     }

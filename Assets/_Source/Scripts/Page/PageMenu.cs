@@ -38,7 +38,6 @@ public class PageMenu : PanelBase
         _buttonShop.OnClick.AddListener(GoToShop);
 
         Game.Action.OnEnter += Exit;
-        Game.Action.OnExit += Enter;
     }
 
     private void GoToShop()

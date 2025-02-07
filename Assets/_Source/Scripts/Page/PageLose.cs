@@ -6,6 +6,7 @@ public class PageLose : PanelBase
 {
     [SerializeField] private TextMeshProUGUI _text;
     private int _earningCoin;
+    public int EarningCoin => _earningCoin;
 
     protected override void Hide()
     {
@@ -32,7 +33,7 @@ public class PageLose : PanelBase
             Join(_components[1].DOLocalMoveX(0, _delay).SetEase(Ease.OutBack).From(-300)).
             Join(_components[2].DOScale(1, _delay).SetEase(Ease.OutBack).From(0)).
             Join(_components[3].DOLocalMoveX(0, _delay).SetEase(Ease.OutBack).From(300)).
-            
+                    
             OnComplete(OnShowComplated);
     }
 

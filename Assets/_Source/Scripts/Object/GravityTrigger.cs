@@ -21,6 +21,7 @@ public class GravityTrigger : MonoBehaviour
     {
         _collider.enabled = false;
         _floor.Disable();
+        Game.Audio.PlayClip(0);
       
         int r = Random.Range(0, 2);
         var gravity = Game.Locator.Gravity;

@@ -129,7 +129,7 @@ public class PlayerBase : MonoBehaviour
         if (_isJump) return;
         _isJump = true;
 
-        Debug.Log("Jump");
+        Game.Audio.PlayClip(3);
         OnJump?.Invoke();
 
         _sequence?.Kill();
@@ -142,7 +142,7 @@ public class PlayerBase : MonoBehaviour
 
     private void Slide()
     {
-        Debug.Log("Slide");
+        Game.Audio.PlayClip(2);
         OnSlide?.Invoke();
     }
 

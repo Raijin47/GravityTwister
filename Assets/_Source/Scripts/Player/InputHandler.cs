@@ -6,8 +6,11 @@ public class InputHandler : MonoBehaviour
     public event Action<bool> OnLeft;
     public event Action<bool> OnJump;
 
-    private Vector2 _startTouchPosition;
-    private Vector2 _endTouchPosition;
+    private Vector2 _tapPosition;
+    private Vector2 _swipeDelta;
+
+    private readonly float DeadZone = 200;
+    private bool _isSwiping;
 
     private bool IsHorizontal { get; set; }
     private bool IsInverse { get; set; }
@@ -20,70 +23,73 @@ public class InputHandler : MonoBehaviour
         Game.Locator.Gravity.OnChangeGravity += Gravity_OnChangeGravity;
     }
 
-#if UNITY_EDITOR
-    private void Update() => Arrow();
-#else
-        private void Update() => Swipe();
-#endif
 
-    private void Arrow()
+    private void Update()
     {
-        if (IsHorizontal)
+        if (Input.touchCount > 0)
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-                OnLeft?.Invoke(!IsInverse);
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-                OnLeft?.Invoke(IsInverse);
-
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-                OnJump?.Invoke(!IsInverse);
-
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-                OnJump?.Invoke(IsInverse);
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                _isSwiping = true;
+                _tapPosition = Input.GetTouch(0).position;
+            }
+            else if (Input.GetTouch(0).phase == TouchPhase.Canceled ||
+                Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                ResetSwipe();
+            }
         }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-                OnLeft?.Invoke(!IsInverse);
 
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-                OnLeft?.Invoke(IsInverse);
-
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-                OnJump?.Invoke(IsInverse);
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-                OnJump?.Invoke(!IsInverse);
-        }
+        CheckSwipe();
     }
 
-    private void Swipe()
+    private void CheckSwipe()
     {
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-            _startTouchPosition = Input.GetTouch(0).position;
-
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
+        if (_isSwiping)
         {
-            _endTouchPosition = Input.GetTouch(0).position;
+            if (Input.touchCount > 0)
+                _swipeDelta = Input.GetTouch(0).position - _tapPosition;
+        }
 
-            if (IsHorizontal)
+        if (_swipeDelta.magnitude > DeadZone)
+        {
+            if (Mathf.Abs(_swipeDelta.x) > Mathf.Abs(_swipeDelta.y))
             {
-                if (_endTouchPosition.x > _startTouchPosition.x)
-                    OnLeft?.Invoke(IsInverse);
-
-                if (_endTouchPosition.x < _startTouchPosition.x)
-                    OnLeft?.Invoke(!IsInverse);
+                if (IsHorizontal)
+                {
+                    if (_swipeDelta.x > 0) OnLeft?.Invoke(IsInverse);
+                    else OnLeft?.Invoke(!IsInverse);            
+                }
+                else
+                {
+                    if (_swipeDelta.x > 0) OnJump?.Invoke(!IsInverse);
+                    else OnJump?.Invoke(IsInverse);
+                }
             }
             else
             {
-                if (_endTouchPosition.y < _startTouchPosition.y)
-                    OnLeft?.Invoke(IsInverse);
-
-                if (_endTouchPosition.y > _startTouchPosition.y)
-                    OnLeft?.Invoke(!IsInverse);
+                if(IsHorizontal)
+                {
+                    if (_swipeDelta.y > 0) OnJump?.Invoke(!IsInverse);
+                    else OnJump?.Invoke(IsInverse);
+                }
+                else
+                {
+                    if (_swipeDelta.y > 0) OnLeft?.Invoke(!IsInverse);
+                    else OnLeft?.Invoke(IsInverse);
+                }
             }
+
+            ResetSwipe();
         }
+    }
+
+    private void ResetSwipe()
+    {
+        _isSwiping = false;
+
+        _tapPosition = Vector2.zero;
+        _swipeDelta = Vector2.zero;
     }
 
     private void Gravity_OnChangeGravity(bool isHorizontal, bool isInverse)
