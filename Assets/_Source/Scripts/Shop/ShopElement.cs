@@ -49,7 +49,11 @@ public class ShopElement : MonoBehaviour
         _image.sprite = _sprites[_current];
     }
 
-    private void Selected() => Game.Locator.Shop.SelectedEquipment(_id);
+    private void Selected()
+    {
+        //Game.Locator.Shop.SelectedEquipment(_id);
+    }
+
     public bool IsEquipped()
     {
         return Game.Data.Saves.CurrentEquip[_id] == _current;

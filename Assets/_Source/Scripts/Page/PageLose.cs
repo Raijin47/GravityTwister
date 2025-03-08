@@ -5,11 +5,12 @@ using UnityEngine;
 public class PageLose : PanelBase
 {
     [SerializeField] private TextMeshProUGUI _text;
-    private int _earningCoin;
-    public int EarningCoin => _earningCoin;
+    public int EarningCoin { get; set; }
 
     protected override void Hide()
     {
+        EarningCoin = 0;
+
         _sequence.Append(_canvas.DOFade(0, _delay)).
             Join(_components[0].DOScale(2, _delay)).
             Join(_components[1].DOLocalMoveX(-300, _delay).SetEase(Ease.InBack)).
@@ -20,11 +21,10 @@ public class PageLose : PanelBase
     protected override void Show()
     {
         float distance = Game.Locator.Player.transform.position.z;
-        _earningCoin = (int)(Game.Locator.Watch.CurrentTime / 60 * distance);
 
         _text.text = $"{Game.Locator.Watch.GetTime()}\n" +
             $"{Mathf.Round(Game.Locator.Player.transform.position.z)}m\n" +
-            $"{_earningCoin}<sprite=0>";
+            $"{EarningCoin}<sprite=0>";
 
         _sequence.SetDelay(_delay).
             Append(_canvas.DOFade(1, _delay)).
@@ -42,13 +42,6 @@ public class PageLose : PanelBase
         base.Start();
 
         Game.Action.OnLose += Enter;
-        Game.Action.OnExit += Exit;
         Game.Action.OnRestart += Exit;
-    }
-
-    protected override void OnShowComplated()
-    {
-        base.OnShowComplated();
-        Game.Wallet.Add(_earningCoin);
     }
 }

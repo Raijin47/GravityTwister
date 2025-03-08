@@ -17,7 +17,7 @@ public class Shop : MonoBehaviour
         _buttonPreview.OnClick.AddListener(Preview);
         _buttonAction.OnClick.AddListener(Action);
 
-        Game.Locator.PageShop.OnClose += PageShop_OnClose;
+        //Game.Locator.PageShop.OnClose += PageShop_OnClose;
 
         foreach (ShopElement equpment in _equipments)
             equpment.Init();

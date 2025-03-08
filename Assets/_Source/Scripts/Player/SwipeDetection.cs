@@ -8,7 +8,7 @@ public class SwipeDetection : MonoBehaviour
     private Vector2 _tapPosition;
     private Vector2 _swipeDelta;
 
-    private readonly float DeadZone = 200;
+    private readonly float DeadZone = 50;
     private bool _isSwiping;
 
     private void Update()

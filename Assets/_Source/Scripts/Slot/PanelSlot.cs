@@ -1,17 +1,16 @@
 using DG.Tweening;
-using UnityEngine;
 
 public class PanelSlot : PanelBase
 {
-    [SerializeField] private RectTransform _upper;
-    [SerializeField] private RectTransform _lower;
+    private readonly float Delay = 2f;
 
     protected override void Hide()
     {
-        _sequence.SetDelay(_delay).
+        Game.Action.SendExit();
+
+        _sequence.SetDelay(Delay).
             Append(_canvas.DOFade(0, _delay).From(1)).
-            Join(_upper.DOScaleY(0, _delay).From(1)).
-            Join(_lower.DOScaleY(0, _delay).From(1)).
+
             OnComplete(Game.Locator.PageMenu.Enter);
     }
 
@@ -19,15 +18,12 @@ public class PanelSlot : PanelBase
     {
         _sequence.
             Append(_canvas.DOFade(1, _delay).From(0)).
-            Join(_upper.DOScaleY(1, _delay).From(0).SetEase(Ease.OutBack)).
-            Join(_lower.DOScaleY(1, _delay).From(0).SetEase(Ease.OutBack)).
-            Join(_components[0].DOScale(1, _delay).From(2).SetEase(Ease.OutBack)).
-            OnComplete(OnShowComplated).AppendCallback(Game.Locator.SpinController.Spin);
-    }
+            Join(_components[0].DOScaleX(1, _delay).SetEase(Ease.OutBack).From(0)).
+            Join(_components[1].DOScaleX(1, _delay).SetEase(Ease.OutBack).From(0)).
+            Join(_components[2].DOScaleX(1, _delay).SetEase(Ease.OutBack).From(0)).
+            Join(_components[3].DOScaleX(1, _delay).SetEase(Ease.OutBack).From(0)).
+            Join(_components[4].DOScaleX(1, _delay).SetEase(Ease.OutBack).From(0)).
 
-    protected override void Start()
-    {
-        base.Start();
-        Game.Action.OnExit += Enter;
-    } 
+            OnComplete(Exit);
+    }
 }
